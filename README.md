@@ -28,7 +28,8 @@ Le MDT web envoie une requête HTTP au serveur FiveM via un webhook sécurisé. 
 ```lua
 -- config.lua
 return {
-    WebhookPath           = '/notify',       -- route de notification commande
+    WebhookPath           = '/notify',       -- route de notification commande (en service uniquement)
+    WebhookPathAnnounce   = '/announce',     -- route annonce globale (tous les employés)
     WebhookPathDutyPath   = '/duty',         -- route prise/fin de service
     WebhookPathDutyStatus = '/duty/status',  -- route statut de service
 
@@ -51,7 +52,7 @@ Toutes les routes nécessitent le header `x-secret: <WebhookSecret>`.
 
 ### `POST /notify`
 
-Notifie tous les employés Burgershot **en service**.
+Notifie tous les employés Burgershot **en service** (notification ox_lib discrète).
 
 **Body JSON**
 
@@ -64,6 +65,25 @@ Notifie tous les employés Burgershot **en service**.
 
 ```json
 { "ok": true, "notified": 3 }
+```
+
+---
+
+### `POST /announce`
+
+Envoie une annonce visuelle (carte UI) à **tous les employés Burgershot** connectés, qu'ils soient en service ou non.
+
+**Body JSON**
+
+| Champ     | Type   | Requis | Description                         |
+|-----------|--------|--------|-------------------------------------|
+| `message` | string | oui    | Contenu de l'annonce                |
+| `title`   | string | non    | Titre (défaut : valeur du config)   |
+
+**Réponse**
+
+```json
+{ "ok": true, "announced": 5 }
 ```
 
 ---
