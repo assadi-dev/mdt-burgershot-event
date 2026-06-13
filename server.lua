@@ -75,6 +75,10 @@ local function routeDuty(data, res)
         send(res, 404, {message = 'Player not found or offline'}) ; return
     end
 
+    if player.PlayerData.job.name ~= 'burgershot' then
+        send(res, 403, {message = 'Player is not a burgershot employee'}) ; return
+    end
+
     local currentDuty = player.PlayerData.job.onduty
     local newDuty     = (data.duty ~= nil) and data.duty or (not currentDuty)
 
@@ -96,6 +100,10 @@ local function routeDutyStatus(data, res)
     local player = exports.qbx_core:GetPlayerByCitizenId(citizenid)
     if not player then
         send(res, 404, {message = 'Player not found or offline'}) ; return
+    end
+
+    if player.PlayerData.job.name ~= 'burgershot' then
+        send(res, 403, {message = 'Player is not a burgershot employee'}) ; return
     end
 
     send(res, 200, {citizenid = citizenid, onduty = player.PlayerData.job.onduty})
