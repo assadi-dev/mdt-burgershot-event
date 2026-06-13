@@ -63,6 +63,23 @@ local function routeNotify(data, res)
     send(res, 200, {ok = true, notified = #targets})
 end
 
+-- POST /announce  body: { title?, message }
+local function routeAnnounce(data, res)
+    local title   = tostring(data.title   or Config.NotifyTitle)
+    local message = tostring(data.message or '')
+
+    if message == '' then
+        send(res, 400, {message = 'Missing field: message'}) ; return
+    end
+
+    local targets = getBurgerPlayers(false)
+    for _, src in ipairs(targets) do
+        TriggerClientEvent('mdt-burgershot-event:client:announce', src, title, message)
+    end
+
+    send(res, 200, {ok = true, announced = #targets})
+end
+
 -- POST /duty  body: { citizenid, duty? }
 local function routeDuty(data, res)
     local citizenid = data.citizenid
@@ -113,6 +130,7 @@ end
 
 local routes = {
     ['POST:' .. Config.WebhookPath]             = { fn = routeNotify,      body = true  },
+    ['POST:' .. Config.WebhookPathAnnounce]     = { fn = routeAnnounce,    body = true  },
     ['POST:' .. Config.WebhookPathDutyPath]     = { fn = routeDuty,        body = true  },
     ['POST:' .. Config.WebhookPathDutyStatus]   = { fn = routeDutyStatus,  body = true  },
 }

@@ -15,6 +15,7 @@ files {
     'ui/assets/bell.mp3',
     'ui/index.html',
     'ui/style.css',
+    'ui/announce.css',
     'ui/assets/logo.png',
 }
 
