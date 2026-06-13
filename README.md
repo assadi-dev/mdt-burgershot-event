@@ -2,6 +2,12 @@
 
 Resource FiveM (QBox) qui déclenche des notifications en jeu lorsqu'une commande est effectuée depuis le MDT Burgershot web.
 
+## Aperçus
+
+![Notification en jeu](preview/Capture%20d'écran%202026-06-13%20205611.png)
+![Notification en jeu 2](preview/Capture%20d'écran%202026-06-13%20214153.png)
+![Notification en jeu 3](preview/Capture%20d'écran%202026-06-13%20214258.png)
+
 ## Fonctionnement
 
 Le MDT web envoie une requête HTTP au serveur FiveM via un webhook sécurisé. Le serveur identifie les employés Burgershot en service et leur envoie une notification (son + alerte visuelle ox_lib) directement dans le jeu.
