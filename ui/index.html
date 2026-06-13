@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="./style.css?v=1">
+</head>
+<body>
+
+<audio id="ring" src="./assets/bell.mp3" preload="auto"></audio>
+<div id="notifications" aria-live="polite"></div>
+
+<script>
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function createNotif(title, message, duration) {
+    var container = document.getElementById('notifications');
+
+    var notif = document.createElement('div');
+    notif.className = 'notif';
+    notif.innerHTML =
+      '<div class="notif-badge"><img src="./assets/logo.png" alt="Burgershot"></div>' +
+      '<div class="notif-content">' +
+        '<div class="notif-title">' + escapeHtml(title) + '</div>' +
+        '<div class="notif-message">' + escapeHtml(message) + '</div>' +
+      '</div>';
+
+    var bar = document.createElement('div');
+    bar.className = 'notif-bar';
+    bar.style.animationDuration = duration + 'ms';
+    notif.appendChild(bar);
+
+    container.appendChild(notif);
+
+    setTimeout(function() {
+      notif.classList.add('hide');
+      setTimeout(function() {
+        if (notif.parentNode) notif.parentNode.removeChild(notif);
+      }, 320);
+    }, duration);
+  }
+
+  window.addEventListener('message', function(e) {
+    if (e.data.action === 'playRing') {
+      var audio = document.getElementById('ring');
+      audio.currentTime = 0;
+      audio.play();
+    }
+    if (e.data.action === 'notify') {
+      createNotif(
+        e.data.title   || 'Burgershot',
+        e.data.message || '',
+        e.data.duration || 5000
+      );
+    }
+  });
+</script>
+</body>
+</html>
