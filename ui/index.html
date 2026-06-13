@@ -82,6 +82,7 @@
   window.addEventListener('message', function(e) {
     if (e.data.action === 'playRing') {
       var audio = document.getElementById('ring');
+      audio.volume = 0.5;
       audio.currentTime = 0;
       audio.play();
     }
