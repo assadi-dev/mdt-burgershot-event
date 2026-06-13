@@ -23,5 +23,5 @@ ui_page 'ui/index.html'
 server_script 'server.lua'
 client_script 'client.lua'
 
-dependency 'qbx_core'
+dependency 'qb-core'
 dependency 'ox_lib'
