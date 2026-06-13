@@ -72,7 +72,7 @@ local function routeAnnounce(data, res)
         send(res, 400, {message = 'Missing field: message'}) ; return
     end
 
-    local targets = getBurgerPlayers(false)
+    local targets = getBurgerPlayers(true)
     for _, src in ipairs(targets) do
         TriggerClientEvent('mdt-burgershot-event:client:announce', src, title, message)
     end
