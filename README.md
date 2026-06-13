@@ -1,6 +1,6 @@
 # mdt-burgershot-event
 
-Resource FiveM (QBox) qui déclenche des notifications en jeu lorsqu'une commande est effectuée depuis le MDT Burgershot web.
+Resource FiveM (QBcore) qui déclenche des notifications en jeu lorsqu'une commande est effectuée depuis le MDT Burgershot web.
 
 ## Fonctionnement
 
@@ -8,7 +8,7 @@ Le MDT web envoie une requête HTTP au serveur FiveM via un webhook sécurisé. 
 
 ## Dépendances
 
-- [qbx_core](https://github.com/Qbox-project/qbx_core)
+- [qb-core](https://github.com/qbcore-framework/qb-core)
 - [ox_lib](https://github.com/overextended/ox_lib)
 
 ## Installation
