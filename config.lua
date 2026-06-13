@@ -2,7 +2,7 @@ return {
     WebhookPath    = '/notify',
     WebhookPathDutyPath   = '/duty',
     WebhookPathDutyStatus = '/duty/status',
-    WebhookSecret  = "secret-password",
+    WebhookSecret  = "sk-fef2fd1302953e48dca08ebd27895844",
 
 
     -- Notification ox_lib
