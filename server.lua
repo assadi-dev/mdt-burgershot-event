@@ -1,3 +1,4 @@
+local QBCore = exports['qb-core']:GetCoreObject()
 local Config = lib.require('config')
 
 -- ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -9,18 +10,15 @@ end
 
 -- Returns an array of player sources for the burgershot job.
 local function getBurgerPlayers(onDutyOnly)
-    if onDutyOnly then
-        local _, sources = exports.qbx_core:GetDutyCountJob('burgershot')
-        return sources
-    end
+    return QBCore.Functions.GetPlayersByJob('burgershot', onDutyOnly)
+end
 
-    local sources = {}
-    for src, player in pairs(exports.qbx_core:GetQBPlayers()) do
-        if player.PlayerData.job.name == 'burgershot' then
-            sources[#sources + 1] = src
-        end
+local function parseQuery(queryStr)
+    local params = {}
+    for k, v in (queryStr or ''):gmatch('([^&=]+)=([^&=]*)') do
+        params[k] = v
     end
-    return sources
+    return params
 end
 
 local function parseQuery(queryStr)
@@ -95,7 +93,7 @@ local function routeDuty(data, res)
         send(res, 400, {message = 'Missing field: citizenid'}) ; return
     end
 
-    local player = exports.qbx_core:GetPlayerByCitizenId(citizenid)
+    local player = QBCore.Functions.GetPlayerByCitizenId(citizenid)
     if not player then
         send(res, 404, {message = 'Player not found or offline'}) ; return
     end
@@ -107,7 +105,7 @@ local function routeDuty(data, res)
     local currentDuty = player.PlayerData.job.onduty
     local newDuty     = (data.duty ~= nil) and data.duty or (not currentDuty)
 
-    exports.qbx_core:SetJobDuty(player.PlayerData.source, newDuty)
+    player.Functions.SetJobDuty(newDuty)
 
     local label = newDuty and 'Prise de service' or 'Fin de service'
     TriggerClientEvent('mdt-burgershot-event:client:notify', player.PlayerData.source, Config.NotifyTitle, label)
@@ -122,7 +120,7 @@ local function routeDutyStatus(data, res)
         send(res, 400, {message = 'Missing field: citizenid'}) ; return
     end
 
-    local player = exports.qbx_core:GetPlayerByCitizenId(citizenid)
+    local player = QBCore.Functions.GetPlayerByCitizenId(citizenid)
     if not player then
         send(res, 404, {message = 'Player not found or offline'}) ; return
     end

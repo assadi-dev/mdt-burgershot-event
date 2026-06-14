@@ -4,7 +4,7 @@ lua54 'yes'
 
 author 'Assadi'
 description 'MDT Burgershot Event Notifier'
-version '1.0.2'
+version '1.0.1'
 
 shared_scripts {
     '@ox_lib/init.lua',
@@ -24,5 +24,5 @@ ui_page 'ui/index.html'
 server_script 'server.lua'
 client_script 'client.lua'
 
-dependency 'qbx_core'
+dependency 'qb-core'
 dependency 'ox_lib'
