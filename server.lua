@@ -33,8 +33,17 @@ end
 
 -- ─── Auth middleware ──────────────────────────────────────────────────────────
 
+local function getHeader(headers, name)
+    if not headers then return nil end
+    local lower = name:lower()
+    for k, v in pairs(headers) do
+        if k:lower() == lower then return v end
+    end
+end
+
 local function checkSecret(req, res)
-    local secret = req.headers and req.headers['x-secret']
+    print('[MDT-DEBUG] req.headers = ' .. json.encode(req.headers or {}))
+    local secret = getHeader(req.headers, 'x-secret')
     if not secret then
         send(res, 401, {message = 'Unauthorized: missing x-secret header'}) ; return false
     end
