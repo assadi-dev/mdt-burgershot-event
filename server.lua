@@ -145,7 +145,6 @@ local routes = {
 
 SetHttpHandler(function(req, res)
     local basePath, queryStr = req.path:match('^([^?]*)%??(.*)')
-    print('[mdt-burgershot-event] HTTP ' .. req.method .. ' path=' .. tostring(basePath))
 
     local route = routes[req.method .. ':' .. basePath]
     if not route then
