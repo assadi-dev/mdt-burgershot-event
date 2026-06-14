@@ -31,8 +31,16 @@ end
 
 -- ─── Auth middleware ──────────────────────────────────────────────────────────
 
+local function getHeader(headers, name)
+    if not headers then return nil end
+    local lower = name:lower()
+    for k, v in pairs(headers) do
+        if k:lower() == lower then return v end
+    end
+end
+
 local function checkSecret(req, res)
-    local secret = req.headers and req.headers['x-secret']
+    local secret = getHeader(req.headers, 'x-secret')
     if not secret then
         send(res, 401, {message = 'Unauthorized: missing x-secret header'}) ; return false
     end
@@ -59,6 +67,23 @@ local function routeNotify(data, res)
     end
 
     send(res, 200, {ok = true, notified = #targets})
+end
+
+-- POST /announce  body: { title?, message }
+local function routeAnnounce(data, res)
+    local title   = tostring(data.title   or Config.NotifyTitle)
+    local message = tostring(data.message or '')
+
+    if message == '' then
+        send(res, 400, {message = 'Missing field: message'}) ; return
+    end
+
+    local targets = getBurgerPlayers(true)
+    for _, src in ipairs(targets) do
+        TriggerClientEvent('mdt-burgershot-event:client:announce', src, title, message)
+    end
+
+    send(res, 200, {ok = true, announced = #targets})
 end
 
 -- POST /duty  body: { citizenid, duty? }
@@ -111,6 +136,7 @@ end
 
 local routes = {
     ['POST:' .. Config.WebhookPath]             = { fn = routeNotify,      body = true  },
+    ['POST:' .. Config.WebhookPathAnnounce]     = { fn = routeAnnounce,    body = true  },
     ['POST:' .. Config.WebhookPathDutyPath]     = { fn = routeDuty,        body = true  },
     ['POST:' .. Config.WebhookPathDutyStatus]   = { fn = routeDutyStatus,  body = true  },
 }

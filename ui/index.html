@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="./style.css?v=1">
+<link rel="stylesheet" type="text/css" href="./announce.css?v=1">
 </head>
 <body>
 
 <audio id="ring" src="./assets/bell.mp3" preload="auto"></audio>
 <div id="notifications" aria-live="polite"></div>
+<div id="announces" aria-live="assertive"></div>
 
 <script>
   function escapeHtml(str) {
@@ -45,9 +47,42 @@
     }, duration);
   }
 
+  function createAnnounce(title, message, duration) {
+    var container = document.getElementById('announces');
+
+    var card = document.createElement('div');
+    card.className = 'announce';
+    card.innerHTML =
+      '<div class="announce-head">' +
+        '<div class="announce-seal"><img src="./assets/logo.png" alt="Burgershot"></div>' +
+        '<div class="announce-meta">' +
+          '<div class="announce-brand">Burgershot</div>' +
+          '<div class="announce-subtitle">Annonce d\'entreprise</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="announce-divider"></div>' +
+      '<div class="announce-title">' + escapeHtml(title) + '</div>' +
+      '<div class="announce-message">' + escapeHtml(message) + '</div>';
+
+    var bar = document.createElement('div');
+    bar.className = 'announce-bar';
+    bar.style.animationDuration = duration + 'ms';
+    card.appendChild(bar);
+
+    container.appendChild(card);
+
+    setTimeout(function() {
+      card.classList.add('hide');
+      setTimeout(function() {
+        if (card.parentNode) card.parentNode.removeChild(card);
+      }, 300);
+    }, duration);
+  }
+
   window.addEventListener('message', function(e) {
     if (e.data.action === 'playRing') {
       var audio = document.getElementById('ring');
+      audio.volume = 0.5;
       audio.currentTime = 0;
       audio.play();
     }
@@ -56,6 +91,13 @@
         e.data.title   || 'Burgershot',
         e.data.message || '',
         e.data.duration || 5000
+      );
+    }
+    if (e.data.action === 'announce') {
+      createAnnounce(
+        e.data.title   || 'Burgershot',
+        e.data.message || '',
+        e.data.duration || 10000
       );
     }
   });
