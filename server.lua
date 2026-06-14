@@ -42,7 +42,6 @@ local function getHeader(headers, name)
 end
 
 local function checkSecret(req, res)
-    print('[MDT-DEBUG] req.headers = ' .. json.encode(req.headers or {}))
     local secret = getHeader(req.headers, 'x-secret')
     if not secret then
         send(res, 401, {message = 'Unauthorized: missing x-secret header'}) ; return false
